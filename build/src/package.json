@@ -1,0 +1,9 @@
+{
+    "name": "ut1l",
+    "version": "0.0.0",
+    "description": "Utility stuff",
+    "dependencies": {},
+    "repository": "https://github.com/hhelwich/ut1l.git",
+    "author": "Hendrik Helwich",
+    "license": ""
+}

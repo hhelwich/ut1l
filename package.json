@@ -1,0 +1,24 @@
+{
+    "private": true,
+    "scripts": {
+        "test": "./node_modules/.bin/grunt travis",
+        "blanket": {
+            "pattern": "/build/src/",
+            "data-cover-never": "/node_modules/"
+        }
+    },
+    "dependencies": {},
+    "devDependencies": {
+        "grunt-cli": "latest",
+        "grunt-contrib-watch": "latest",
+        "grunt-contrib-clean": "latest",
+        "grunt-contrib-copy": "latest",
+        "grunt-contrib-coffee": "latest",
+        "grunt-mocha-cov": "latest",
+        "chai": "latest",
+        "mocha-term-cov-reporter": "latest"
+    },
+    "repository": "https://github.com/hhelwich/ut1l.git",
+    "author": "Hendrik Helwich",
+    "license": ""
+}

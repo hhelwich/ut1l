@@ -2,20 +2,19 @@
 
 # Log info messages for debugging. **TODO**: empty later
 
-log =
+module.exports =
+
   info: (message) ->
     console.log "INFO: #{message}"
+    return
 
   warn: (message) ->
     console.log "WARN: #{message}"
+    return
 
 # Throw an application specific error.
 
   fail: (message) ->
     throw
-      name: "2cpyError"
+      #name: "Error"
       message: message
-
-# ### Public API
-
-module.exports = log

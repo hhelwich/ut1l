@@ -3,7 +3,7 @@ module.exports =
   # Return a function which creates a new object with the given prototype and initializes this object with the given
   # constructor function (if given).
   # Also copy optional `extend` object content to returned function.
-  createConstructor: (prototype, constructor, extend) ->
+  creator: (prototype, constructor, extend) ->
     if not prototype?
       f = -> constructor.apply null, arguments
     else

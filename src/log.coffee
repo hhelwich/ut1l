@@ -1,7 +1,5 @@
 # A basic logging module.
 
-# Log info messages for debugging. **TODO**: empty later
-
 module.exports =
 
   info: (message) ->

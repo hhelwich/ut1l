@@ -5,7 +5,7 @@
 module.exports =
 
   info: (message) ->
-    console.log "INFO: #{message}"
+    #console.log "INFO: #{message}"
     return
 
   warn: (message) ->

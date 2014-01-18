@@ -4,8 +4,9 @@ module.exports =
   # constructor function (if given).
   # Also copy optional `extend` object content to returned function.
   creator: (prototype, constructor, extend) ->
-    if not prototype?
-      f = -> constructor.apply null, arguments
+    if typeof prototype == "function" # first argument is missing => shift arguments
+      f = prototype
+      extend = constructor
     else
       # Create function which forwards to given constructor function (if given).
       F = if not constructor? then -> else

@@ -1,4 +1,5 @@
 {
+    "name": "ut1l",
     "private": true,
     "scripts": {
         "test": "./node_modules/.bin/grunt travis",
@@ -14,9 +15,9 @@
         "grunt-contrib-clean": "latest",
         "grunt-contrib-copy": "latest",
         "grunt-contrib-coffee": "latest",
-        "grunt-mocha-cov": "latest",
-        "chai": "latest",
-        "mocha-term-cov-reporter": "latest"
+        "grunt-karma": "latest",
+        "grunt-browserify" : "latest",
+        "grunt-contrib-uglify" : "latest"
     },
     "repository": "https://github.com/hhelwich/ut1l.git",
     "author": "Hendrik Helwich",

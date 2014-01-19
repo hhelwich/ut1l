@@ -1,5 +1,5 @@
 
-{info, warn, fail} = require "../src/log"
+{info, warn, fail} = ut1l.log
 
 describe "Logger", ->
 

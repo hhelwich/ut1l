@@ -1,8 +1,8 @@
-_ = require "../src/obj"
+_ = ut1l.obj
 
 describe "Object utils", ->
 
-  describe "createConstructor()", ->
+  describe "creator()", ->
 
     it "creates a new empty object with given prototype", ->
       proto = a: 123
@@ -40,12 +40,12 @@ describe "Object utils", ->
     it "can be called with no protoype", ->
       f = (a, b) -> a + b
       foo = { bla: 42 }
-      constr = _.creator null, f, foo
+      constr = _.creator f, foo
       # validate
       # constr should be a clone of f
-      (expect constr).not.toBe f
+      (expect constr).toBe f
       (expect constr).not.toBe foo
       (expect constr 2, 3).toBe 5
       # should been extended with foo
       (expect constr.bla).toBe 42
-      (expect f.bla).not.toBeDefined()
+      (expect f.bla).toBeDefined()

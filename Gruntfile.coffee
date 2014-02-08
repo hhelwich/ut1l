@@ -6,11 +6,32 @@ testSrcDir = "test"
 
 module.exports = (grunt) ->
 
+  pkg = grunt.file.readJSON "package.json"
+
+  browsers = [
+    browserName: "firefox"
+    version: "19"
+    platform: "XP"
+  ,
+    browserName: "chrome"
+    platform: "XP"
+  ,
+    browserName: "chrome"
+    platform: "linux"
+  ,
+    browserName: "internet explorer"
+    platform: "WIN8"
+    version: "10"
+  ,
+    browserName: "internet explorer"
+    platform: "VISTA"
+    version: "9"
+  ]
+
   grunt.initConfig
 
-    pkg: grunt.file.readJSON "package.json"
 
-    clean: ["#{workDir}/**/*.js"]
+    clean: ["#{workDir}"]
 
     watch:
       files: [
@@ -39,26 +60,17 @@ module.exports = (grunt) ->
         dest: "#{workDir}/#{testSrcDir}"
         ext: ".js"
 
-    mochacov:
-      unit:
-        options:
-          reporter: "spec"
-      coverage:
-        options:
-          reporter: "mocha-term-cov-reporter"
-          coverage: true
-      coveralls:
-        options:
-          coveralls:
-            serviceName: "travis-ci"
-            repoToken: "WesptL0TOfo5X8P33s8yV0c88nNMSp5GN"
-      options:
-        files: "#{workDir}/**/*.js"
 
     copy:
       markup:
         src: "*.md"
         dest: "#{workDir}/#{srcDir}/"
+      packageJson:
+        src: "package.json"
+        dest: "#{workDir}/#{srcDir}/"
+      jasmine:
+        src: ["test/**/*.html", "test/**/*.js", "test/**/*.css"]
+        dest: "#{workDir}/"
 
     browserify:
       dist:
@@ -79,24 +91,29 @@ module.exports = (grunt) ->
           files["#{workDir}/#{name}.min.js"] = ["#{workDir}/#{name}.js"]
           files
 
-    karma:
-      unit:
+    connect:
+      server:
         options:
-          files: ["build/ut1l.js", "build/tests.js"]
-        singleRun: true
-        browsers: ["PhantomJS"]
-        frameworks: ["jasmine"]
-
-  grunt.loadNpmTasks "grunt-contrib-watch"
-  grunt.loadNpmTasks "grunt-contrib-clean"
-  grunt.loadNpmTasks "grunt-contrib-coffee"
-  grunt.loadNpmTasks "grunt-contrib-copy"
-  grunt.loadNpmTasks "grunt-browserify"
-  grunt.loadNpmTasks "grunt-contrib-uglify"
-  grunt.loadNpmTasks "grunt-karma"
+          base: ""
+          port: 9999
 
 
-  grunt.registerTask "default", ["clean", "coffee", "copy", "browserify", "uglify", "karma"]
+    'saucelabs-jasmine':
+      all:
+        options:
+          urls: ["http://127.0.0.1:9999/build/test/browser/jasmine/SpecRunner.html"]
+          tunnelTimeout: 5
+          build: process.env.TRAVIS_JOB_ID
+          concurrency: 3
+          browsers: browsers
+          testname: "pasta tests"
+          tags: ["master"]
 
-  grunt.registerTask "travis", ["clean", "coffee", "mochacov", "copy"]
+
+  # Loading dependencies
+  for name of pkg.devDependencies
+    if name != "grunt" and name != "grunt-cli" and (name.indexOf "grunt") == 0
+      grunt.loadNpmTasks name
+
+  grunt.registerTask "travis", ["clean", "coffee", "copy", "browserify", "uglify", "connect", "saucelabs-jasmine"]
 

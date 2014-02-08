@@ -1,13 +1,12 @@
 before_deploy: cd build/src
-node_js: 
+node_js:
 - "0.10"
-env: 
-  global: 
-    secure: ZoAieh02PFSl12IgeO8pJKEKRBbl0qWFWdDwFJDCvEULKdkhFhSPaEe7b9LPqGFcWLU4Z+kzlpe/gsXfSQ51XaAMm1lONhAs+d9/GdaakQmdSFaSnbm37845cppX/3K2oT6AjmUenom9Gx6A/nasuftZfIWYwXUhdP4nXAMEf8o=
 deploy: 
   provider: npm
   email: hendrik@helwich.de
   skip_cleanup: true
-  api_key: 
-    secure: ed4k7u/W6Sb6GVmRiMt7gfBry7VTXKefJ+LJLowQDallDVuzcVwqKcwFmG8S4fKJHxewkmghA7uX/Be/zB3MYj/HKIeSRregJghLoO3Yewfec56LZX64LL25jlqHw8xrC01jXIyLnxpKSBJ4m0mPqFue/u0iHErZP7At9MkHq/4=
+env: 
+  global: 
+  - secure: B+rW930555wI0xZwYnirTJ5ixCaNdmZvNc8zjmFfs1Ra2WH39yF9GBJOLZlJ87YLT4/FFdzFEB6uh2MReeTGUeqqCohscsHT2y7VBoggz+ph4+BKYkvtmxUJEQy0SYUeBhlL+Po1HraGeN2bTouzNhzmAYF+cpSBCUqxfKY8R3E=
+  - secure: FiA5K6MXKIh6pOK7ou7bvrw+xTq08tDz7Yt+6/zjVDUyLlkaffFs7QdhmVTCkU3tnY0eLXk9kQJmYhZgO+2ej1Y1zy+100+lvgVkBbQvBK90LXb8t48xXeHQr6Tn11uiuXzT574w3CuAQJeKfwuGQocl8v2hP4rPfdOXCeQ/qIA=
 language: node_js

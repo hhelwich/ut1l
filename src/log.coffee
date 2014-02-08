@@ -7,7 +7,7 @@ module.exports =
     return
 
   warn: (message) ->
-    console.log "WARN: #{message}"
+    #console.log "WARN: #{message}"
     return
 
 # Throw an application specific error.

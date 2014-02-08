@@ -26,6 +26,10 @@ module.exports = (grunt) ->
     browserName: "internet explorer"
     platform: "VISTA"
     version: "9"
+  ,
+    browserName: "internet explorer"
+    platform: "XP"
+    version: "8"
   ]
 
   grunt.initConfig
@@ -81,7 +85,7 @@ module.exports = (grunt) ->
       tests:
         files: do ->
           files = {}
-          files["#{workDir}/tests.js"] = ["#{workDir}/#{testSrcDir}/browser/**/*.js"]
+          files["#{workDir}/tests.js"] = ["#{workDir}/#{testSrcDir}/browser/src/**/*.js"]
           files
 
     uglify:
@@ -96,6 +100,7 @@ module.exports = (grunt) ->
         options:
           base: ""
           port: 9999
+          #hostname: "*"
 
 
     'saucelabs-jasmine':
@@ -106,7 +111,7 @@ module.exports = (grunt) ->
           build: process.env.TRAVIS_JOB_ID
           concurrency: 3
           browsers: browsers
-          testname: "pasta tests"
+          testname: "browser black box tests"
           tags: ["master"]
 
 
@@ -116,4 +121,6 @@ module.exports = (grunt) ->
       grunt.loadNpmTasks name
 
   grunt.registerTask "travis", ["clean", "coffee", "copy", "browserify", "uglify", "connect", "saucelabs-jasmine"]
+  grunt.registerTask "dev", ["clean", "coffee", "copy", "browserify", "uglify", "connect", "watch"]
+  grunt.registerTask "default", ["dev"]
 

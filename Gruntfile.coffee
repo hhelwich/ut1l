@@ -8,29 +8,14 @@ module.exports = (grunt) ->
 
   pkg = grunt.file.readJSON "package.json"
 
-  browsers = [
-    browserName: "firefox"
-    version: "19"
-    platform: "XP"
-  ,
-    browserName: "chrome"
-    platform: "XP"
-  ,
-    browserName: "chrome"
-    platform: "linux"
-  ,
-    browserName: "internet explorer"
-    platform: "WIN8"
-    version: "10"
-  ,
-    browserName: "internet explorer"
-    platform: "VISTA"
-    version: "9"
-  ,
-    browserName: "internet explorer"
-    platform: "XP"
-    version: "8"
-  ]
+  browsers = []
+
+  browsers.push browser for browser in ({platform: "XP", browserName: "googlechrome", version: "#{vers}"} for vers in [26..31])
+
+  browsers.push browser for browser in ({browserName: "firefox", version: "#{vers}"} for vers in [3..26])
+
+  browsers.push browser for browser in ({browserName: "internet explorer", version: "#{vers}"} for vers in [6..11])
+
 
   grunt.initConfig
 

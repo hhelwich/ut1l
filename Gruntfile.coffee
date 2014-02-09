@@ -105,7 +105,7 @@ module.exports = (grunt) ->
     if name != "grunt" and name != "grunt-cli" and (name.indexOf "grunt") == 0
       grunt.loadNpmTasks name
 
-  grunt.registerTask "travis", ["clean", "coffee", "copy", "browserify", "uglify"]#,  "connect", "saucelabs-jasmine"]
+  grunt.registerTask "travis", ["clean", "coffee", "copy", "browserify", "uglify", "connect", "saucelabs-jasmine"]
   grunt.registerTask "dev", ["clean", "coffee", "copy", "browserify", "uglify", "connect", "watch"]
   grunt.registerTask "default", ["dev"]
 

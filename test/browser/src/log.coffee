@@ -1,5 +1,7 @@
+# get export in browser or node.js (after browserify)
+_ = if ut1l? then ut1l else require.call null, "../../src/index"
 
-{info, warn, fail} = ut1l.log
+{info, warn, fail} = _.log
 
 describe "Logger", ->
 

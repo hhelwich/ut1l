@@ -70,7 +70,7 @@ module.exports = (grunt) ->
       tests:
         files: do ->
           files = {}
-          files["#{workDir}/tests.js"] = ["#{workDir}/#{testSrcDir}/browser/src/**/*.js"]
+          files["#{workDir}/#{testSrcDir}/browser/#{name}Spec.js"] = ["#{workDir}/#{testSrcDir}/browser/src/**/*.js"]
           files
 
     uglify:
@@ -105,7 +105,7 @@ module.exports = (grunt) ->
     if name != "grunt" and name != "grunt-cli" and (name.indexOf "grunt") == 0
       grunt.loadNpmTasks name
 
-  grunt.registerTask "travis", ["clean", "coffee", "copy", "browserify", "uglify", "connect", "saucelabs-jasmine"]
+  grunt.registerTask "travis", ["clean", "coffee", "copy", "browserify", "uglify"]#,  "connect", "saucelabs-jasmine"]
   grunt.registerTask "dev", ["clean", "coffee", "copy", "browserify", "uglify", "connect", "watch"]
   grunt.registerTask "default", ["dev"]
 

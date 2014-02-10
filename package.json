@@ -2,9 +2,13 @@
     "name": "ut1l",
     "version": "0.1.0",
     "description": "Utility stuff",
-    "repository": "https://github.com/hhelwich/ut1l.git",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/hhelwich/ut1l.git"
+    },
     "license": "MIT",
     "author": "Hendrik Helwich",
+    "main": "index.js",
     "private": true,
     "scripts": {
         "test": "./node_modules/.bin/grunt travis && ./node_modules/.bin/istanbul cover ./node_modules/.bin/jasmine-node --captureExceptions build && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"

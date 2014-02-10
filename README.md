@@ -2,3 +2,11 @@ ut1l [![.](https://badge.fury.io/js/ut1l.png)](http://badge.fury.io/js/ut1l) [![
 ====
 
 [![Browser Test Status](https://saucelabs.com/browser-matrix/ut1l.svg)](https://saucelabs.com/u/ut1l)
+
+
+
+## Changelog
+
+### 0.1.0 / 2014-02-10
+
+* Initial release

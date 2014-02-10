@@ -77,7 +77,7 @@ module.exports = (grunt) ->
       dist:
         files:do ->
           files = {}
-          files["#{workDir}/#{name}.min.js"] = ["#{workDir}/#{name}.js"]
+          files["#{name}.min.js"] = ["#{workDir}/#{name}.js"]
           files
 
     connect:

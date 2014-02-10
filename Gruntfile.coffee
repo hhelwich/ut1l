@@ -53,9 +53,6 @@ module.exports = (grunt) ->
       markup:
         src: "*.md"
         dest: "#{workDir}/#{srcDir}/"
-      packageJson:
-        src: "package.json"
-        dest: "#{workDir}/#{srcDir}/"
       jasmine:
         src: ["test/**/*.html", "test/**/*.js", "test/**/*.css"]
         dest: "#{workDir}/"
@@ -114,7 +111,17 @@ module.exports = (grunt) ->
     if name != "grunt" and name != "grunt-cli" and (name.indexOf "grunt") == 0
       grunt.loadNpmTasks name
 
-  grunt.registerTask "travis", ["clean", "coffee", "copy", "browserify", "uglify", "usebanner", "connect", "saucelabs-jasmine"]
-  grunt.registerTask "dev", ["clean", "coffee", "copy", "browserify", "uglify", "usebanner", "connect", "watch"]
+  grunt.registerTask "travis", ["clean", "coffee", "copy", "adaptPackageJson", "browserify", "uglify", "usebanner", "connect", "saucelabs-jasmine"]
+  grunt.registerTask "dev", ["clean", "coffee", "copy", "adaptPackageJson", "browserify", "uglify", "usebanner", "connect", "watch"]
   grunt.registerTask "default", ["dev"]
 
+
+
+  grunt.registerTask "adaptPackageJson", ->
+    fs = require "fs"
+    tmpPkg = require "./package"
+
+    tmpPkg.devDependencies = {}
+    delete tmpPkg.private
+    delete tmpPkg.scripts
+    fs.writeFileSync "./build/src/package.json", JSON.stringify tmpPkg, null, 2

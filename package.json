@@ -19,7 +19,8 @@
         "grunt-contrib-uglify": "0.3.2",
         "jasmine-node": "1.13.1",
         "istanbul": "0.2.4",
-        "coveralls": "2.7.1"
+        "coveralls": "2.7.1",
+        "grunt-banner": "0.2.0"
     },
     "repository": "https://github.com/hhelwich/ut1l.git",
     "author": "Hendrik Helwich",

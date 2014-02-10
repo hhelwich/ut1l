@@ -1,12 +1,10 @@
 workDir = "build"
 srcDir = "src"
 testSrcDir = "test"
-{name} = require "./package"
+pkg = require "./package"
 
 
 module.exports = (grunt) ->
-
-  pkg = grunt.file.readJSON "package.json"
 
   browsers = []
   browsers.push browser for browser in ({browserName: "iphone", version: "#{vers}"} for vers in [4, "5.0", "5.1", "6.0", "6.1", 7])
@@ -19,6 +17,7 @@ module.exports = (grunt) ->
 
   grunt.initConfig
 
+    pkg: pkg
 
     clean: ["#{workDir}"]
 
@@ -65,20 +64,30 @@ module.exports = (grunt) ->
       dist:
         files: do ->
           files = {}
-          files["#{workDir}/#{name}.js"] = ["#{workDir}/#{srcDir}/index.js"]
+          files["#{workDir}/#{pkg.name}.js"] = ["#{workDir}/#{srcDir}/index.js"]
           files
       tests:
         files: do ->
           files = {}
-          files["#{workDir}/#{testSrcDir}/browser/#{name}Spec.js"] = ["#{workDir}/#{testSrcDir}/browser/src/**/*.js"]
+          files["#{workDir}/#{testSrcDir}/browser/#{pkg.name}Spec.js"] = ["#{workDir}/#{testSrcDir}/browser/src/**/*.js"]
           files
 
     uglify:
       dist:
         files:do ->
           files = {}
-          files["#{name}.min.js"] = ["#{workDir}/#{name}.js"]
+          files["#{pkg.name}.min.js"] = ["#{workDir}/#{pkg.name}.js"]
           files
+
+    usebanner:
+      taskName:
+        options:
+          position: "top"
+          banner: "// <%= pkg.name %> v<%= pkg.version %> | (c) 2013-<%= grunt.template.today('yyyy') %> <%= pkg.author %> | <%= pkg.license %> License"
+          linebreak: true
+        files:
+          src: [ "#{pkg.name}.min.js", "#{workDir}/#{pkg.name}.js" ]
+
 
     connect:
       server:
@@ -105,7 +114,7 @@ module.exports = (grunt) ->
     if name != "grunt" and name != "grunt-cli" and (name.indexOf "grunt") == 0
       grunt.loadNpmTasks name
 
-  grunt.registerTask "travis", ["clean", "coffee", "copy", "browserify", "uglify", "connect", "saucelabs-jasmine"]
-  grunt.registerTask "dev", ["clean", "coffee", "copy", "browserify", "uglify", "connect", "watch"]
+  grunt.registerTask "travis", ["clean", "coffee", "copy", "browserify", "uglify", "usebanner", "connect", "saucelabs-jasmine"]
+  grunt.registerTask "dev", ["clean", "coffee", "copy", "browserify", "uglify", "usebanner", "connect", "watch"]
   grunt.registerTask "default", ["dev"]
 

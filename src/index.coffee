@@ -1,6 +1,6 @@
 module.exports = index =
-  log: require "./log"
   obj: require "./obj"
+  error: require "./error"
 
 # create global index if in browser
 if window?

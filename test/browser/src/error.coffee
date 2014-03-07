@@ -1,3 +1,10 @@
+require "./console"
+
+if (new Error()).stack?
+  console.log "INFO: Interpreter supports error stacks"
+else
+  console.log "INFO: Interpreter does not support error stacks"
+
 # get export in browser or node.js (after browserify)
 _ = if ut1l? then ut1l else require.call null, "../../src/index"
 
@@ -55,7 +62,7 @@ describe "Error builder", ->
       (expect e instanceof Error).toBe true
       (expect e.toString()).toBe "MySubError: My sub error cause"
       if e.stack?
-        (expect getStackLine e.stack).toBe 59 # set JavaScript line number where mySubError is thrown
+        (expect getStackLine e.stack).toBe 76 # set JavaScript line number where mySubError is thrown
 
 
   describe "returned error object", ->
@@ -81,4 +88,4 @@ describe "Error builder", ->
 
     it "has the expected line number in the stack", ->
       if myError.stack?
-        (expect getStackLine myError.stack).toBe 78 # set JavaScript line number where myError is thrown
+        (expect getStackLine myError.stack).toBe 95 # set JavaScript line number where myError is thrown

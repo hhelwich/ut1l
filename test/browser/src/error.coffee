@@ -91,7 +91,7 @@ describe "Error builder", ->
 
     it "has the expected line number in the stack", ->
       if myError.stack? and not isOpera
-        (expect getStackLine myError.stack).toBe 94 # set JavaScript line number where myError is thrown
+        (expect getStackLine myError.stack).toBe 100 # set JavaScript line number where myError is thrown
 
   describe "snatch()", ->
 

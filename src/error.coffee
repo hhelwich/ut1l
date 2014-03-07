@@ -1,16 +1,19 @@
-toString = ->
-  (if @name? then @name else "Error") + (if @message? then ": #{@message}" else "")
+{creator} = require "./object"
 
-module.exports = (name) ->
-  F = (message) ->
-    # set message
-    @message = message
-    # get stack with correct line number
-    E = Error.call @, message
-    @stack = E.stack
-    return
-  proto = new Error()
+toString = ->
+  str = if @name? then @name else "Error"
+  str += ": #{@message}" if @message?
+  str
+
+module.exports = (name, parent) ->
+  if parent?
+    proto = parent()
+  else
+    proto = new Error()
+    proto.toString = toString # needed for IE6 and IE7
   proto.name = name
-  proto.toString = toString # needed for IE6 and IE7
-  F.prototype = proto
-  F
+  constr = (@message) ->
+    e = Error.call @, message # get stack with correct line number
+    @stack = e.stack
+    return
+  creator proto, constr

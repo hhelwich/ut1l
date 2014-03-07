@@ -3,61 +3,82 @@ _ = if ut1l? then ut1l else require.call null, "../../src/index"
 
 error = _.error
 
-describe "inherited Error", ->
+getStackLine = (stack) ->
+  (expect stack).toEqual jasmine.any String
+  regExp = /ut1lSpec\.js:(\d*)[^\d]/
+  match = regExp.exec stack
+  (expect match).not.toBeNull()
+  (expect match).toEqual jasmine.any Array
+  (expect match.length).toBe 2
+  +match[1]
 
-  TestError = null
-  testError = null
+
+describe "Error builder", ->
+
+  myErrorBuilder = null
 
   beforeEach ->
-    TestError = error "TestErrorName"
+    myErrorBuilder = error "MyError"
+
+
+  it "works with empty name argument", ->
+    myErrorBuilder = error()
     try
-      throw new TestError "TestErrorMessage"
-    catch testError
-
-  it "throws", ->
-    (expect -> throw new TestError "TestErrorMessage").toThrow()
-
-  it "has expected name and message", ->
-    (expect testError.name).toBe "TestErrorName"
-    (expect testError.message).toBe "TestErrorMessage"
-
-  it "works with instanceof", ->
-    (expect testError instanceof Error).toBe true
-    (expect testError instanceof TestError).toBe true
-
-  it "returns expected result from toString()", ->
-    (expect testError.toString()).toBe "TestErrorName: TestErrorMessage"
-
-  it "has the expected line number in the stack", ->
-    stack = testError.stack
-    if stack?
-      (expect stack).toEqual jasmine.any String
-      regExp = /ut1lSpec\.js:(\d*)[^\d]/
-      match = regExp.exec stack
-      (expect match).not.toBeNull()
-      (expect match).toEqual jasmine.any Array
-      (expect match.length).toBe 2
-      line = +match[1]
-      (expect line).toBe 15 # set JavaScript line number where TestError is thrown
-
-  it "behaves expected for empty name argument", ->
-    TestError = error()
+      throw myErrorBuilder("My error cause")
+    catch e
+      (expect e.name).not.toBeDefined()
+      (expect e.message).toBe "My error cause"
+      (expect e.toString()).toBe "Error: My error cause"
     try
-      throw new TestError("TestErrorMessage")
-    catch testError
-    (expect testError.name).not.toBeDefined()
-    (expect testError.message).toBe "TestErrorMessage"
-    (expect testError.toString()).toBe "Error: TestErrorMessage"
-    try
-      throw new TestError()
-    catch testError
-    (expect testError.name).not.toBeDefined()
-    (expect testError.message).not.toBeDefined()
-    (expect testError.toString()).toBe "Error"
+      throw myErrorBuilder()
+    catch e
+      (expect e.name).not.toBeDefined()
+      (expect e.message).not.toBeDefined()
+      (expect e.toString()).toBe "Error"
 
-  it "behaves expected for empty message argument", ->
+  it "works with empty message argument", ->
     try
-      throw new TestError()
-    catch testError
-    (expect testError.message).not.toBeDefined()
-    (expect testError.toString()).toBe "TestErrorName"
+      throw myErrorBuilder()
+    catch e
+      (expect e.message).not.toBeDefined()
+      (expect e.toString()).toBe "MyError"
+
+  it "can be used with parent builder", ->
+    mySubErrorBuilder = error "MySubError", myErrorBuilder
+    try
+      throw mySubErrorBuilder "My sub error cause"
+    catch e
+      (expect e.message).toBe "My sub error cause"
+      (expect e.name).toBe "MySubError"
+      (expect e instanceof mySubErrorBuilder).toBe true
+      (expect e instanceof myErrorBuilder).toBe true
+      (expect e instanceof Error).toBe true
+      (expect e.toString()).toBe "MySubError: My sub error cause"
+      if e.stack?
+        (expect getStackLine e.stack).toBe 59 # set JavaScript line number where mySubError is thrown
+
+
+  describe "returned error object", ->
+
+    myError = null
+
+    beforeEach ->
+      try
+        throw myErrorBuilder "My error cause"
+      catch myError
+
+
+    it "has expected name and message", ->
+      (expect myError.name).toBe "MyError"
+      (expect myError.message).toBe "My error cause"
+
+    it "works with instanceof", ->
+      (expect myError instanceof Error).toBe true
+      (expect myError instanceof myErrorBuilder).toBe true
+
+    it "returns expected result from toString()", ->
+      (expect myError.toString()).toBe "MyError: My error cause"
+
+    it "has the expected line number in the stack", ->
+      if myError.stack?
+        (expect getStackLine myError.stack).toBe 78 # set JavaScript line number where myError is thrown

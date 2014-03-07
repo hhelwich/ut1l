@@ -52,3 +52,19 @@ describe "Object utils", ->
       # should been extended with foo
       (expect constr.bla).toBe 42
       (expect f.bla).toBeDefined()
+
+    it "works with instanceof", ->
+      builder = creator {}, ->
+      inst = builder()
+      # validate
+      (expect inst instanceof builder).toBe true
+
+    it "works with inherited instanceofs", ->
+      builder = creator {}, ->
+      subbuilder = creator builder(), ->
+      inst1 = builder()
+      inst2 = subbuilder()
+      (expect inst1 instanceof builder).toBe true
+      (expect inst1 instanceof subbuilder).toBe false
+      (expect inst2 instanceof builder).toBe true
+      (expect inst2 instanceof subbuilder).toBe true

@@ -20,4 +20,5 @@ module.exports =
     # Add static fields to function.
     for key, value of extend
       f[key] = value
+    f.prototype = prototype
     f

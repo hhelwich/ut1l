@@ -1,5 +1,5 @@
 module.exports = index =
-  obj: require "./obj"
+  object: require "./object"
   error: require "./error"
 
 # create global index if in browser

@@ -33,13 +33,13 @@ describe "Error builder", ->
     try
       throw myErrorBuilder("My error cause")
     catch e
-      (expect e.name).not.toBeDefined()
+      (expect e.name).toBe "Error"
       (expect e.message).toBe "My error cause"
       (expect e.toString()).toBe "Error: My error cause"
     try
       throw myErrorBuilder()
     catch e
-      (expect e.name).not.toBeDefined()
+      (expect e.name).toBe "Error"
       (expect e.message).not.toBeDefined()
       (expect e.toString()).toBe "Error"
 
@@ -59,7 +59,6 @@ describe "Error builder", ->
       (expect e.name).toBe "MySubError"
       (expect e instanceof mySubErrorBuilder).toBe true
       (expect e instanceof myErrorBuilder).toBe true
-      (expect e instanceof Error).toBe true
       (expect e.toString()).toBe "MySubError: My sub error cause"
       if e.stack?
         (expect getStackLine e.stack).toBe 76 # set JavaScript line number where mySubError is thrown
@@ -80,7 +79,6 @@ describe "Error builder", ->
       (expect myError.message).toBe "My error cause"
 
     it "works with instanceof", ->
-      (expect myError instanceof Error).toBe true
       (expect myError instanceof myErrorBuilder).toBe true
 
     it "returns expected result from toString()", ->
@@ -88,4 +86,46 @@ describe "Error builder", ->
 
     it "has the expected line number in the stack", ->
       if myError.stack?
-        (expect getStackLine myError.stack).toBe 95 # set JavaScript line number where myError is thrown
+        (expect getStackLine myError.stack).toBe 94 # set JavaScript line number where myError is thrown
+
+  describe "snatch()", ->
+
+    divisionByZero = error "DivisionByZero"
+    onerror = (e) ->
+      (expect e).toBeDefined()
+      (expect e instanceof divisionByZero).toBe true
+      42
+
+    it "snatches a specific error", ->
+      action = (n, d) ->
+        if (d != 0)
+          n / d
+        else
+          throw divisionByZero("Oh no!")
+      newaction = divisionByZero.snatch action, onerror
+      (expect newaction 2, 3).toBe 2 / 3
+      (expect newaction 2, 0).toBe 42
+
+    it "also snatches sub errors", ->
+      divisionByNegativZero = error "DivisionByNegativZero", divisionByZero
+      action = -> throw divisionByNegativZero()
+      newaction = divisionByZero.snatch action, onerror
+      (expect newaction 2, 0).toBe 42
+
+    it "does not snatch other errors", ->
+      syntaxError = error "SyntaxError"
+      action = -> throw syntaxError()
+      newaction = divisionByZero.snatch action, onerror
+      (expect (-> newaction 2, 0)).toThrow()
+
+    it "preserves 'this' in action function", ->
+      obj =
+        foo: divisionByZero.snatch ->
+          (expect @).toBe obj
+      obj.foo()
+
+    it "preserves 'this' in error handler", ->
+      obj =
+        foo: divisionByZero.snatch (-> throw divisionByZero()), ->
+          (expect @).toBe obj
+      obj.foo()

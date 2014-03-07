@@ -1,7 +1,7 @@
 # get export in browser or node.js (after browserify)
 _ = if ut1l? then ut1l else require.call null, "../../src/index"
 
-{creator} = _.object
+creator = _.object
 
 describe "Object utils", ->
 

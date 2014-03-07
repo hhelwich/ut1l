@@ -1,19 +1,37 @@
-{creator} = require "./object"
+creator = require "./object"
 
-toString = ->
-  str = if @name? then @name else "Error"
-  str += ": #{@message}" if @message?
-  str
+errorProto =
 
-module.exports = (name, parent) ->
-  if parent?
-    proto = parent()
-  else
-    proto = new Error()
-    proto.toString = toString # needed for IE6 and IE7
-  proto.name = name
-  constr = (@message) ->
-    e = Error.call @, message # get stack with correct line number
-    @stack = e.stack
-    return
-  creator proto, constr
+  name: "Error"
+
+  toString: -> # needed for IE6 and IE7
+    if @message? then "#{@name}: #{@message}" else @name
+
+
+errorConstr = (@message) ->
+  e = Error.call @, message # get stack with correct line number
+  @stack = e.stack
+  return
+
+
+errorExtend =
+
+  snatch: (action, onError) ->
+    builder = @
+    ->
+      try
+        action.apply @, arguments
+      catch e
+        if e instanceof builder
+          onError.call @, e
+        else
+          throw e
+
+
+errorBuilder = creator errorProto, errorConstr, errorExtend
+
+
+module.exports = (name, parent = errorBuilder) ->
+  proto = parent()
+  proto.name = name if name?
+  creator proto, errorConstr, errorExtend

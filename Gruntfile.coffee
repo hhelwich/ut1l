@@ -1,6 +1,7 @@
 workDir = "build"
 srcDir = "src"
 testSrcDir = "test"
+distDir = "dist"
 pkg = require "./package"
 
 
@@ -61,7 +62,7 @@ module.exports = (grunt) ->
       dist:
         files: do ->
           files = {}
-          files["#{workDir}/#{pkg.name}.js"] = ["#{workDir}/#{srcDir}/index.js"]
+          files["#{distDir}/#{pkg.name}.js"] = ["#{workDir}/#{srcDir}/index.js"]
           files
       tests:
         files: do ->
@@ -73,7 +74,7 @@ module.exports = (grunt) ->
       dist:
         files:do ->
           files = {}
-          files["#{pkg.name}.min.js"] = ["#{workDir}/#{pkg.name}.js"]
+          files["#{distDir}/#{pkg.name}.min.js"] = ["#{distDir}/#{pkg.name}.js"]
           files
 
     usebanner:
@@ -83,7 +84,7 @@ module.exports = (grunt) ->
           banner: "// <%= pkg.name %> v<%= pkg.version %> | (c) 2013-<%= grunt.template.today('yyyy') %> <%= pkg.author %> | <%= pkg.license %> License"
           linebreak: true
         files:
-          src: [ "#{pkg.name}.min.js", "#{workDir}/#{pkg.name}.js" ]
+          src: [ "#{distDir}/#{pkg.name}.min.js", "#{distDir}/#{pkg.name}.js" ]
 
 
     connect:

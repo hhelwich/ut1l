@@ -18,7 +18,7 @@ createBuilder = (prototype, constructor, extend) ->
     f = -> new F arguments
     f.prototype = prototype # for instanceof
   # Add static fields to function.
-  for key, value of extend
+  for key, value of extend # no need to check with hasOwnProperty() as Function.prototype inherits Object.prototype
     f[key] = value
   f
 

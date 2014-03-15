@@ -93,44 +93,44 @@ describe "Error builder", ->
       if myError.stack? and not isOpera
         (expect getStackLine myError.stack).toBe 100 # set JavaScript line number where myError is thrown
 
-  describe "snatch()", ->
+describe "c4tch()", ->
 
-    divisionByZero = error "DivisionByZero"
-    onerror = (e) ->
-      (expect e).toBeDefined()
-      (expect e instanceof divisionByZero).toBe true
-      42
+  notANumber = error "NotANumber"
+  onerror = (e) ->
+    (expect e).toBeDefined()
+    (expect e instanceof notANumber).toBe true
+    42
 
-    it "snatches a specific error", ->
-      action = (n, d) ->
-        if (d != 0)
-          n / d
-        else
-          throw divisionByZero("Oh no!")
-      newaction = divisionByZero.snatch action, onerror
-      (expect newaction 2, 3).toBe 2 / 3
-      (expect newaction 2, 0).toBe 42
+  it "catches a specific error", ->
+    action = (n, d) ->
+      if (d != 0)
+        n / d
+      else
+        throw notANumber("Oh no!")
+    newaction = notANumber.c4tch action, onerror
+    (expect newaction 2, 3).toBe 2 / 3
+    (expect newaction 2, 0).toBe 42
 
-    it "also snatches sub errors", ->
-      divisionByNegativZero = error "DivisionByNegativZero", divisionByZero
-      action = -> throw divisionByNegativZero()
-      newaction = divisionByZero.snatch action, onerror
-      (expect newaction 2, 0).toBe 42
+  it "also catches sub errors", ->
+    divisionByNegativZero = error "DivisionByNegativZero", notANumber
+    action = -> throw divisionByNegativZero()
+    newaction = notANumber.c4tch action, onerror
+    (expect newaction 2, 0).toBe 42
 
-    it "does not snatch other errors", ->
-      syntaxError = error "SyntaxError"
-      action = -> throw syntaxError()
-      newaction = divisionByZero.snatch action, onerror
-      (expect (-> newaction 2, 0)).toThrow()
+  it "does not catch other errors", ->
+    syntaxError = error "SyntaxError"
+    action = -> throw syntaxError()
+    newaction = notANumber.c4tch action, onerror
+    (expect (-> newaction 2, 0)).toThrow()
 
-    it "preserves 'this' in action function", ->
-      obj =
-        foo: divisionByZero.snatch ->
-          (expect @).toBe obj
-      obj.foo()
+  it "preserves 'this' in action function", ->
+    obj =
+      foo: notANumber.c4tch ->
+        (expect @).toBe obj
+    obj.foo()
 
-    it "preserves 'this' in error handler", ->
-      obj =
-        foo: divisionByZero.snatch (-> throw divisionByZero()), ->
-          (expect @).toBe obj
-      obj.foo()
+  it "preserves 'this' in error handler", ->
+    obj =
+      foo: notANumber.c4tch (-> throw notANumber()), ->
+        (expect @).toBe obj
+    obj.foo()

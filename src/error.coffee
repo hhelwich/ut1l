@@ -16,7 +16,7 @@ errorConstr = (@message) ->
 
 errorExtend =
 
-  snatch: (action, onError) ->
+  c4tch: (action, onError) ->
     builder = @
     ->
       try

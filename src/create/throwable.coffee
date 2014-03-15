@@ -16,8 +16,7 @@ createTopThrowable = O throwableProto
 # Constructor function for a new throwable
 throwableConstr = (@message) ->
   e = Error.call @, message # get stack with correct line number
-  if e.stack?
-    @stack = e.stack
+  @stack = e.stack
   return
 
 

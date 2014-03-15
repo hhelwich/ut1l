@@ -1,6 +1,7 @@
 module.exports = index =
-  object: require "./object"
-  error: require "./error"
+  create:
+    object: require "./create/object"
+    throwable: require "./create/throwable"
 
 # create global index if in browser
 if window?

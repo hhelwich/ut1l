@@ -1,15 +1,15 @@
 # get export in browser or node.js (after browserify)
 _ = if ut1l? then ut1l else require.call null, "../../src/index"
 
-creator = _.object
+O = _.create.object
 
-describe "Object utils", ->
+describe "Object", ->
 
-  describe "creator()", ->
+  describe "Builder", ->
 
     it "creates a new empty object with given prototype", ->
       proto = a: 123
-      obj = do (creator proto)
+      obj = do (O proto)
       # validate
       (expect obj).not.toBe proto
       (expect obj.a).toBe 123
@@ -19,7 +19,7 @@ describe "Object utils", ->
     it "creates a new object with given prototype and constructor", ->
       proto = a: 123
       construct = (@b) ->
-      obj = (creator proto, construct) 456
+      obj = (O proto, construct) 456
       # validate
       (expect obj.a).toBe 123
       (expect obj.b).toBe 456
@@ -28,14 +28,14 @@ describe "Object utils", ->
       stuff =
         a: ->
         b: 3
-      constr = creator {}, (->), stuff
+      constr = O {}, (->), stuff
       # validate
       for foo of stuff
         (expect constr[foo]).toBe stuff[foo]
 
     it "uses constructor return value if truthy", ->
       foo = { bla: 42 }
-      constr = creator {}, -> foo
+      constr = O {}, -> foo
       # validate
       obj = constr()
       (expect obj).toBe foo
@@ -43,7 +43,7 @@ describe "Object utils", ->
     it "can be called with no protoype", ->
       f = (a, b) -> a + b
       foo = { bla: 42 }
-      constr = creator f, foo
+      constr = O f, foo
       # validate
       # constr should be a clone of f
       (expect constr).toBe f
@@ -54,14 +54,14 @@ describe "Object utils", ->
       (expect f.bla).toBeDefined()
 
     it "works with instanceof", ->
-      builder = creator {}, ->
+      builder = O {}, ->
       inst = builder()
       # validate
       (expect inst instanceof builder).toBe true
 
     it "works with inherited instanceofs", ->
-      builder = creator {}, ->
-      subbuilder = creator builder(), ->
+      builder = O {}, ->
+      subbuilder = O builder(), ->
       inst1 = builder()
       inst2 = subbuilder()
       (expect inst1 instanceof builder).toBe true

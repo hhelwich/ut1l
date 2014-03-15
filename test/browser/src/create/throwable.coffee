@@ -1,13 +1,13 @@
-require "../console"
+log = require "../console"
 
 if (new Error()).stack?
-  console.log "INFO: Interpreter supports error stacks"
+  log "Interpreter supports error stacks"
 else
-  console.log "INFO: Interpreter does not support error stacks"
+  log "Interpreter does not support error stacks"
 
 isOpera = opera? and opera.toString() == "[object Opera]"
 if isOpera
-  console.log "WARN: skip error stack line number check in opera" # line numbers in opera 11/12 are bullshit. why?
+  log "skip error stack line number check in opera" # line numbers in opera 11/12 are bullshit. why?
 
 
 # get export in browser or node.js (after browserify)
@@ -68,7 +68,8 @@ describe "Throwable", ->
         (expect e instanceof myErrorBuilder).toBe true
         (expect e.toString()).toBe "MySubError: My sub error cause"
         if e.stack? and not isOpera
-          (expect getStackLine e.stack).toBe 174 # set JavaScript line number where mySubError is thrown
+          log e.stack
+          (expect getStackLine e.stack).toBe 190 # set JavaScript line number where mySubError is thrown
 
 
     describe "returned throwable", ->
@@ -99,7 +100,8 @@ describe "Throwable", ->
 
       it "has the expected line number in the stack", ->
         if myError.stack? and not isOpera
-          (expect getStackLine myError.stack).toBe 192 # set JavaScript line number where myError is thrown
+          log myError.stack
+          (expect getStackLine myError.stack).toBe 209 # set JavaScript line number where myError is thrown
 
   describe "c4tch()", ->
 

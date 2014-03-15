@@ -86,7 +86,13 @@ describe "Throwable", ->
         (expect myError.message).toBe "My error cause"
 
       it "works with instanceof", ->
+        createMySubError = T "MySubError", myErrorBuilder
+        mySubError = createMySubError "Cause1"
+        # verify
         (expect myError instanceof myErrorBuilder).toBe true
+        (expect myError instanceof createMySubError).toBe false
+        (expect mySubError instanceof myErrorBuilder).toBe true
+        (expect mySubError instanceof createMySubError).toBe true
 
       it "returns expected result from toString()", ->
         (expect myError.toString()).toBe "MyError: My error cause"
@@ -97,10 +103,10 @@ describe "Throwable", ->
 
   describe "c4tch()", ->
 
-    notANumber = T "NotANumber"
+    createNotANumber = T "NotANumber"
     onerror = (e) ->
       (expect e).toBeDefined()
-      (expect e instanceof notANumber).toBe true
+      (expect e instanceof createNotANumber).toBe true
       42
 
     it "catches a specific throwable", ->
@@ -108,31 +114,46 @@ describe "Throwable", ->
         if (d != 0)
           n / d
         else
-          throw notANumber("Oh no!")
-      newaction = notANumber.c4tch action, onerror
+          throw createNotANumber("Oh no!")
+      newaction = T.c4tch createNotANumber, action, onerror
       (expect newaction 2, 3).toBe 2 / 3
       (expect newaction 2, 0).toBe 42
 
     it "also catches sub throwables", ->
-      divisionByNegativZero = T "DivisionByNegativZero", notANumber
+      divisionByNegativZero = T "DivisionByNegativZero", createNotANumber
       action = -> throw divisionByNegativZero()
-      newaction = notANumber.c4tch action, onerror
+      newaction = T.c4tch createNotANumber, action, onerror
       (expect newaction 2, 0).toBe 42
 
     it "does not catch other throwables", ->
-      syntaxError = T "SyntaxError"
-      action = -> throw syntaxError()
-      newaction = notANumber.c4tch action, onerror
+      createSyntaxError = T "SyntaxError"
+      action = -> throw createSyntaxError "Cause"
+      fail = -> (expect true).toBe false
+      newaction = T.c4tch createNotANumber, action, fail
       (expect (-> newaction 2, 0)).toThrow()
+
+    it "catches all throwables if no constructor is given", ->
+      onerrorCount = 0
+      createSyntaxError = T "SyntaxError"
+      action = -> throw createSyntaxError "Cause"
+      onerror = -> onerrorCount += 1
+      newaction = T.c4tch action, onerror
+      (expect newaction 2, 0).toBe 1
+
+    it "does not catch differently created values", ->
+      newaction = T.c4tch (-> throw new Error()), ->
+      (expect (-> newaction())).toThrow()
+      newaction = T.c4tch (-> throw "foo"), ->
+      (expect (-> newaction())).toThrow()
 
     it "preserves 'this' in action function", ->
       obj =
-        foo: notANumber.c4tch ->
+        foo: T.c4tch createNotANumber, ->
           (expect @).toBe obj
       obj.foo()
 
     it "preserves 'this' in throwable handler", ->
       obj =
-        foo: notANumber.c4tch (-> throw notANumber()), ->
+        foo: T.c4tch createNotANumber, (-> throw createNotANumber()), ->
           (expect @).toBe obj
       obj.foo()

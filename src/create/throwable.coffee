@@ -28,16 +28,17 @@ createCreateThrowable = (name, parent = createTopThrowable) ->
 
 
 createCreateThrowable.c4tch = ->
+  args = arguments
   throwables = []
-  for arg, idx in arguments
+  for arg, idx in args
     if arg.prototype instanceof createTopThrowable
       throwables.push arg
     else
       break
   if throwables.length == 0
     throwables.push createTopThrowable
-  action = arguments[idx]
-  onError = arguments[idx + 1]
+  action = args[idx]
+  onError = args[idx + 1]
   ->
     try
       action.apply @, arguments

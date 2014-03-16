@@ -41,17 +41,17 @@ describe "Object", ->
       (expect obj).toBe foo
 
     it "can be called with no protoype", ->
-      f = (a, b) -> a + b
+      f = (a, b) ->
+        @result = a + b
       foo = { bla: 42 }
       constr = O f, foo
       # validate
       # constr should be a clone of f
-      (expect constr).toBe f
-      (expect constr).not.toBe foo
-      (expect constr 2, 3).toBe 5
+      (expect (constr 2, 3).result).toBe 5
       # should been extended with foo
       (expect constr.bla).toBe 42
-      (expect f.bla).toBeDefined()
+      # instanceof should work
+      (expect (constr 2, 3) instanceof constr).toBe true
 
     it "works with instanceof", ->
       builder = O {}, ->

@@ -137,20 +137,20 @@ var createMyThrowable = T('MyThrowable'), // top level throwable constructor
     createMySubThrowable = T('MySubThrowable', createMyThrowable); // sub throwable constructor
     
 // ...
-if (somethingBadHappend) {
+if (somethingBadHappened) {
     throw createMyThrowable('Something bad happened!');
 }
 ```
 
 It is easy to build a type tree of throwables if needed. They work with `instanceof` and have a stack property if this is supported by the interpreter.
 
-Additionally to `try...catch` they can be catched like this:
+Additionally to `try...catch` they can be caught like this:
 
 ```javascript
 action2 = T.c4tch(createThrowable1, createThrowable2, ..., action, onError); 
 ```
 
-The action function is proxied and all given throwable types (and their sub types) are catched for this action. If no throwabel type is given, all throwables are catched.
+The action function is proxied and all given throwable types (and their sub types) are caught for this action. If no throwable type is given, all throwables are caught.
 
 Here is combined example:
 

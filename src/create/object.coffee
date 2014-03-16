@@ -2,16 +2,22 @@
 # constructor function (if given).
 # Also copy optional `extend` object content to returned function.
 
-createBuilder = (prototype, constructor, extend) ->
-  if typeof prototype == "function" # first argument is missing => shift arguments
-    extend = constructor
-    constructor = prototype
-    prototype = {}
-  # Create function which forwards to given constructor function (if given).
-  F = if not constructor? then -> else
+createBuilder = (extend, constructor, prototype) ->
+  if typeof extend == "function" # first argument is missing => shift arguments
+    prototype = constructor
+    constructor = extend
+    extend = null
+  else if not constructor? and not prototype?
+    prototype = extend
+    extend = null
+  F = if constructor?
+    # Create function which forwards to given constructor function
     (args) ->
       ret = constructor.apply @, args
       if ret != undefined then ret else @ # if constructor returns not undefined value: use it instead of object
+  else
+    ->
+  prototype = {} if not prototype?
   # Set functions prototype field.
   F.prototype = prototype
   # Create function which creates a new object with the given prototype and initializes with the given constructor.

@@ -9,7 +9,7 @@ describe "Object", ->
 
     it "creates a new empty object with given prototype", ->
       proto = a: 123
-      obj = do (O proto)
+      obj = (O proto)()
       # validate
       (expect obj).not.toBe proto
       (expect obj.a).toBe 123
@@ -19,7 +19,7 @@ describe "Object", ->
     it "creates a new object with given prototype and constructor", ->
       proto = a: 123
       construct = (@b) ->
-      obj = (O proto, construct) 456
+      obj = (O construct, proto) 456
       # validate
       (expect obj.a).toBe 123
       (expect obj.b).toBe 456
@@ -28,14 +28,14 @@ describe "Object", ->
       stuff =
         a: ->
         b: 3
-      constr = O {}, (->), stuff
+      constr = O stuff, (->), {}
       # validate
       for foo of stuff
         (expect constr[foo]).toBe stuff[foo]
 
     it "uses constructor return value if truthy", ->
       foo = { bla: 42 }
-      constr = O {}, -> foo
+      constr = O (-> foo), {}
       # validate
       obj = constr()
       (expect obj).toBe foo
@@ -44,7 +44,7 @@ describe "Object", ->
       f = (a, b) ->
         @result = a + b
       foo = { bla: 42 }
-      constr = O f, foo
+      constr = O foo, f
       # validate
       # constr should be a clone of f
       (expect (constr 2, 3).result).toBe 5
@@ -60,8 +60,8 @@ describe "Object", ->
       (expect inst instanceof builder).toBe true
 
     it "works with inherited instanceofs", ->
-      builder = O {}, ->
-      subbuilder = O builder(), ->
+      builder = O (->)
+      subbuilder = O (->), builder()
       inst1 = builder()
       inst2 = subbuilder()
       (expect inst1 instanceof builder).toBe true

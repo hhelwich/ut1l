@@ -24,7 +24,7 @@ throwableConstr = (@message) ->
 createCreateThrowable = (name, parent = createTopThrowable) ->
   proto = parent()
   proto.name = name if name?
-  O proto, throwableConstr
+  O throwableConstr, proto
 
 
 createCreateThrowable.c4tch = ->

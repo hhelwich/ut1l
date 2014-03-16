@@ -134,7 +134,8 @@ You can create and use throwables like this:
 
 ```javascript
 var createMyThrowable = T('MyThrowable'), // top level throwable constructor
-    createMySubThrowable = T('MySubThrowable', createMyThrowable); // sub throwable constructor
+    createMySubThrowable = T('MySubThrowable', createMyThrowable); // sub throwable 
+                                                                   // constructor
     
 // ...
 if (somethingBadHappened) {

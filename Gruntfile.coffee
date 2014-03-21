@@ -27,6 +27,8 @@ module.exports = (grunt) ->
         "Gruntfile.*"
         "#{srcDir}/**/*.coffee"
         "#{testSrcDir}/**/*.coffee"
+        "#{testSrcDir}/**/*.js"
+        "#{testSrcDir}/**/*.html"
       ]
       tasks: ["default"]
 

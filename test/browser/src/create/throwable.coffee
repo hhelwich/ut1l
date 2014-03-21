@@ -68,7 +68,7 @@ describe "Throwable", ->
         (expect e instanceof myErrorBuilder).toBe true
         (expect e.toString()).toBe "MySubError: My sub error cause"
         if e.stack? and not isOpera
-          log e.stack
+          log e.stack.substring 0, Math.min e.stack.length, 500
           (expect getStackLine e.stack).toBe 188 # set JavaScript line number where mySubError is thrown
 
 
@@ -100,7 +100,7 @@ describe "Throwable", ->
 
       it "has the expected line number in the stack", ->
         if myError.stack? and not isOpera
-          log myError.stack
+          log myError.stack.substring 0, Math.min myError.stack.length, 500
           (expect getStackLine myError.stack).toBe 207 # set JavaScript line number where myError is thrown
 
   describe "c4tch()", ->

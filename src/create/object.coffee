@@ -2,8 +2,38 @@
 # constructor function (if given).
 # Also copy optional `extend` object content to returned function.
 
+isFunction = (func) ->
+  typeof func == "function"
+
+defineProperty = Object.defineProperty
+
+adaptProperties = do ->
+  if isFunction defineProperty
+    c1 =
+      writable:     false
+      enumerable:   false
+      configurable: false
+    c2 =
+      enumerable:   false
+      configurable: false
+    c3 =
+      configurable: false
+    (obj) ->
+      for own prop of obj
+        if prop.length > 0 and (prop.charAt 0) == "_"
+          if prop.length >= 2 and (prop.charAt 1) == "_"
+            defineProperty obj, prop, c1
+          else
+            defineProperty obj, prop, c2
+        else
+          defineProperty obj, prop, c3
+      return
+  else
+    ->
+
+
 createBuilder = (extend, constructor, prototype) ->
-  if typeof extend == "function" # first argument is missing => shift arguments
+  if isFunction extend # first argument is missing => shift arguments
     prototype = constructor
     constructor = extend
     extend = null
@@ -17,7 +47,10 @@ createBuilder = (extend, constructor, prototype) ->
       if ret != undefined then ret else @ # if constructor returns not undefined value: use it instead of object
   else
     ->
-  prototype = {} if not prototype?
+  if prototype?
+    adaptProperties prototype
+  else
+    prototype = {}
   # Set functions prototype field.
   F.prototype = prototype
   # Create function which creates a new object with the given prototype and initializes with the given constructor.

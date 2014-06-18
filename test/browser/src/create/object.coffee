@@ -1,6 +1,8 @@
 # get export in browser or node.js (after browserify)
 _ = if ut1l? then ut1l else require.call null, "../../src/index"
 
+log = require "../console"
+
 O = _.create.object
 
 describe "Object", ->
@@ -68,3 +70,92 @@ describe "Object", ->
       (expect inst1 instanceof subbuilder).toBe false
       (expect inst2 instanceof builder).toBe true
       (expect inst2 instanceof subbuilder).toBe true
+
+
+    describe "prototype properties", ->
+
+      obj = null
+      keys = null
+      proto = null
+
+      hasFeature = typeof Object.defineProperty == "function"
+      if not hasFeature
+        log "browser does not support unenumerable, unwriteable and undeletable properties"
+
+      beforeEach ->
+        # Create object with some prototype
+        proto =
+          pub: "foo"
+          _noenum: "foo2"
+          __nowrite: "foo3"
+        keys = for own key of proto
+          key
+        obj = do O proto
+
+
+      it "_ prefixed properties are not enumerable if possible", ->
+        # Enumerate properties
+        props = {} # Set of all enumerable properties
+        for prop of obj
+          props[prop] = null
+        # Verify enumerable properties
+        if hasFeature
+          (expect props).toEqual
+            pub: null
+        else
+          (expect props).toEqual
+            pub: null
+            _noenum: null
+            __nowrite: null
+
+      it "__ prefixed properties are not writable if possible", ->
+        # Write all properties and check if changed
+        props = {} # Set of all writable properties
+        for prop in keys
+          proto[prop] = 42
+          if proto[prop] == 42
+            props[prop] = null
+        # Verify
+        if hasFeature
+          (expect props).toEqual
+            pub: null
+            _noenum: null
+        else
+          (expect props).toEqual
+            pub: null
+            _noenum: null
+            __nowrite: null
+
+      it "__ prefixed properties are not writable on object if possible", ->
+        # Write all properties and check if changed
+        props = {} # Set of all writable properties
+        for prop in keys
+          obj[prop] = 42
+          if obj[prop] == 42
+            props[prop] = null
+        # Verify
+        if hasFeature
+          (expect props).toEqual
+            pub: null
+            _noenum: null
+        else
+          (expect props).toEqual
+            pub: null
+            _noenum: null
+            __nowrite: null
+
+      it "all properties are not deletable if possible", ->
+        # Write all properties and check if changed
+        props = {} # Set of all deletable properties
+        for prop in keys
+          delete proto[prop]
+          if not proto.hasOwnProperty prop
+            props[prop] = null
+        # Verify
+        if hasFeature
+          (expect props).toEqual {}
+        else
+          (expect props).toEqual
+            pub: null
+            _noenum: null
+            __nowrite: null

@@ -30,8 +30,10 @@ describe "Object", ->
         b: 3
       constr = O stuff, (->), {}
       # validate
-      for foo of stuff
-        (expect constr[foo]).toBe stuff[foo]
+      stuff2 = {}
+      for foo of constr
+        stuff2[foo] = constr[foo]
+      (expect stuff).toEqual stuff2
 
     it "uses constructor return value if truthy", ->
       foo = { bla: 42 }
